@@ -15,6 +15,10 @@ project("tetris" CXX)
 set(TARGET "tetris")
 
 set(HEADERS
+        src/board.h
+        src/pixel.h
+        src/figure.h
+        src/score.h
         ${LIB_DIR}/Graph_lib/fltk.h
         ${LIB_DIR}/Graph_lib/Graph.h
         ${LIB_DIR}/Graph_lib/GUI.h
@@ -23,6 +27,10 @@ set(HEADERS
         ${LIB_DIR}/Graph_lib/Window.h
 )
 set(SOURCES
+        src/board.cpp
+        src/pixel.cpp
+        src/figure.cpp
+        src/score.cpp
         src/main.cpp
         ${LIB_DIR}/Graph_lib/Graph.cpp
         ${LIB_DIR}/Graph_lib/GUI.cpp
