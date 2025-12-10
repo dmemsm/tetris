@@ -30,7 +30,7 @@ Board::Board(Graph_lib::Point xy, int w, int h, const std::string &title) : Wind
     this->attach(*score->text_obj);
 
     for (int i = 0; i < board_width; i++) {
-        for (int j = 0; board_length < board_length; j++) {
+        for (int j = 0; j < board_length; j++) {
             filled[i][j] = false;
             Graph_lib::Color c = Graph_lib::Color(Graph_lib::Color::dark_cyan);
             auto pixel = new Graph_lib::Rectangle(Graph_lib::Point(pixel_size * i + 6, pixel_size * j + 6),
@@ -80,7 +80,7 @@ int Board::handle(int key) {
             case FL_Up: {
                 std::cout << "up\n";
                 this->delete_current_figure();
-                current_figure->rotate_acw();
+                current_figure->rotate_acw(this -> filled);
                 this->add_current_figure();
                 Fl::redraw();
                 break;

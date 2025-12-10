@@ -11,12 +11,12 @@ struct Figure {
     bool can_move_left(bool filled[board_width][board_length]);
     bool can_move_right(bool filled[board_width][board_length]);
     bool can_move_down(bool filled[board_width][board_length]);
+    bool can_rotate(bool filled[board_width][board_length],int afterotate[4][2]);
     void move_down();
     void move_left();
     void move_right();
     // void rotate_cw();
-    void rotate_acw();
-    bool can_rotate_acw(bool filled[board_width][board_length]);
+    void rotate_acw(bool filled[board_width][board_length]);
 
 private:
     Pixel pixels[4];

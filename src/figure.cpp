@@ -50,9 +50,9 @@ Figure::Figure() {
             //   * *
             // * *
             pixels[0].set_position(middle_col, 0);
-            pixels[1].set_position(middle_col-1, 1);
-            pixels[2].set_position(middle_col+1, 0);
-            pixels[3].set_position(middle_col, 1);
+            pixels[1].set_position(middle_col+1, 0);
+            pixels[2].set_position(middle_col, 1);
+            pixels[3].set_position(middle_col-1, 1);
             break;
         }
         case 5: {
@@ -175,8 +175,19 @@ bool Figure::can_move_down(bool filled[board_width][board_length]) {
 //         this->pixels[3].set_col(afterrotate[3][1]);
 //     }
 // }
+bool Figure::can_rotate(bool filled[board_width][board_length], int afterrotate[4][2]){
 
-void Figure::rotate_acw() {
+    for (int i = 0; i < 4; i++){
+        if ((afterrotate[i][0] < 0 || afterrotate[i][0] > board_width - 1) || filled[afterrotate[i][0]][afterrotate[i][1]] || (afterrotate[i][1] > board_length - 1 || afterrotate[i][1] < 0 )) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+
+void Figure::rotate_acw(bool filled[board_width][board_length]) {
     int afterrotate[4][2]; // first elem col, second elem row
     int rotate_col = this->pixels[2].get_col();
     int rotate_row = this->pixels[2].get_row();
@@ -193,23 +204,22 @@ void Figure::rotate_acw() {
         afterrotate[i][1] = rotate_row - coldiff[i]; // new row
     }
     
-    bool can_rotate= true; //flag checking for rotation 
 
-    for (int i = 0; i < 4; i++){
-        if (afterrotate[i][0] < 0 || afterrotate[i][0] > board_width - 1) {
-            can_rotate = false;
-            break;
-        }
-    }
-    if (can_rotate){
+    if (can_rotate(filled,afterrotate)){
         if(type!=6)
         {
-            this->pixels[0].set_row(afterrotate[0][0]);
-            this->pixels[0].set_col(afterrotate[0][1]);
-            this->pixels[1].set_row(afterrotate[1][0]);
-            this->pixels[1].set_col(afterrotate[1][1]);
-            this->pixels[3].set_row(afterrotate[3][0]);
-            this->pixels[3].set_col(afterrotate[3][1]);
+            for (int i = 0; i < 4; i++){
+                if (i == 2) continue;
+                this -> pixels[i].set_col(afterrotate[i][0]);
+                this -> pixels[i].set_row(afterrotate[i][1]);
+
+            }
+            // this->pixels[0].set_col(afterrotate[0][0]);
+            // this->pixels[0].set_row(afterrotate[0][1]);
+            // this->pixels[1].set_col(afterrotate[1][0]);
+            // this->pixels[1].set_row(afterrotate[1][1]);
+            // this->pixels[3].set_col(afterrotate[3][0]);
+            // this->pixels[3].set_row(afterrotate[3][1]);
         }
     }
 }

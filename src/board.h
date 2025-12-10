@@ -19,6 +19,7 @@ struct Board : Window {
     void update_by_time();
     void delete_current_figure();
     void add_current_figure(); 
+    void check_game_over();
 
 private:
     Graph_lib::Rectangle* filledPixels[board_width][board_length];
