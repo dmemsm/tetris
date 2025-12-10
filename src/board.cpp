@@ -33,6 +33,8 @@ bool Board::check_game_over(){
 }
 
 void Board::game_over(){ //TODO дописать логику гейм овера, вывод сообщения о конце игры создание кнопки новой игры
+    fl_alert("Game over!");
+    exit(0);
     std::cout << "Game over!";
 }
 
