@@ -3,7 +3,7 @@
 #include "board.h"
 
 void initialize_board() {
-    Board board{Graph_lib::Point(100, 100), 800, 600, "Tetris"};
+    Board board{Graph_lib::Point(100, 100), 800, 620, "Tetris"};
     Graph_lib::gui_main();
 }
 
