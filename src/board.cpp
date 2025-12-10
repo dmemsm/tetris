@@ -3,7 +3,7 @@
 #include "Graph_lib/Simple_window.h"
 #include "iostream"
 
-const int pixel_size = 30;
+
 
 Window::Window(Graph_lib::Point xy, int w, int h, const std::string &title)
         : Graph_lib::Window{xy, w, h, title}
@@ -20,7 +20,7 @@ Board::Board(Graph_lib::Point xy, int w, int h, const std::string &title) : Wind
     auto background = new Graph_lib::Rectangle(Graph_lib::Point(0, 0), w, h);
     background->set_fill_color(Graph_lib::Color::dark_cyan);
     this->attach(*background);
-    auto rect = new Graph_lib::Rectangle(Graph_lib::Point(5, 5), pixel_size * 16 + 4, pixel_size * 20 + 4);
+    auto rect = new Graph_lib::Rectangle(Graph_lib::Point(5, 5), pixel_size * board_width + 4, pixel_size * board_length + 4);
     rect->set_color(Graph_lib::Color::blue);
     auto style = Graph_lib::Line_style(Graph_lib::Line_style::Line_style_type::solid, 4);
     rect->set_style(style);
@@ -29,8 +29,8 @@ Board::Board(Graph_lib::Point xy, int w, int h, const std::string &title) : Wind
     this->score = new Score();
     this->attach(*score->text_obj);
 
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 20; j++) {
+    for (int i = 0; i < board_width; i++) {
+        for (int j = 0; board_length < board_length; j++) {
             filled[i][j] = false;
             Graph_lib::Color c = Graph_lib::Color(Graph_lib::Color::dark_cyan);
             auto pixel = new Graph_lib::Rectangle(Graph_lib::Point(pixel_size * i + 6, pixel_size * j + 6),
@@ -87,10 +87,12 @@ int Board::handle(int key) {
             }
             case FL_Down: {
                 std::cout << "down\n";
-                this->delete_current_figure();
-                current_figure->rotate_cw();
-                this->add_current_figure();
-                Fl::redraw();
+                if (current_figure -> can_move_down(this -> filled)){
+                    this->delete_current_figure();
+                    current_figure->move_down();
+                    this->add_current_figure();
+                    Fl::redraw();
+            }
                 break;
             }
             case 32: { // Space
@@ -113,15 +115,18 @@ int Board::handle(int key) {
     return key;
 }
 
+
+
+
 void Board::draw_pixels() {
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 20; j++) {
+    for (int i = 0; i < board_width; i++) {
+        for (int j = 0; j < board_length; j++) {
             filledPixels[i][j]->set_fill_color(Graph_lib::Color::dark_cyan);
         }
     }
 
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 20; j++) {
+    for (int i = 0; i < board_width; i++) {
+        for (int j = 0; j < board_length; j++) {
             int r = rand();
             if (r % 2) {
                 filledPixels[i][j]->set_fill_color(Graph_lib::Color(r % 256));
@@ -158,21 +163,21 @@ void Board::update_by_time() {
         current_figure = next_figure;
         next_figure = new Figure();
     }
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < board_length; i++) {
         bool row_filled = true;
-        for (int j = 0; j < 16; j++) {
+        for (int j = 0; j < board_width; j++) {
             if (!filled[j][i]) {
                 row_filled = false;
                 break;
             }
         }
         if (row_filled) {
-            for (int col = 0; col < 16; col++) {
+            for (int col = 0; col < board_width; col++) {
                 filled[col][i] = false;
                 filledPixels[col][i]->set_fill_color(Graph_lib::Color::dark_cyan);
             }
             for (int row = i; row > 0; row--) {
-                for (int col = 0; col < 16; col++) {
+                for (int col = 0; col < board_width; col++) {
                     filled[col][row] = filled[col][row-1];
                     filledPixels[col][row]->set_fill_color(filledPixels[col][row-1]->fill_color());
                 }

@@ -19,6 +19,7 @@ set(HEADERS
         src/pixel.h
         src/figure.h
         src/score.h
+        src/constants.h
         ${LIB_DIR}/Graph_lib/fltk.h
         ${LIB_DIR}/Graph_lib/Graph.h
         ${LIB_DIR}/Graph_lib/GUI.h
@@ -41,7 +42,7 @@ project(${TARGET} CXX)
 
 set(FLTK_SKIP_FLUID True)
 set(FLTK_SKIP_FORMS True)
-
+set(FLTK_ROOT "C:\\FLTK\\bin")
 find_package(FLTK 1.3.8 EXACT REQUIRED)
 find_package(OpenGL REQUIRED)
 
@@ -50,7 +51,7 @@ link_directories(${FLTK_INCLUDE_DIR}/../lib)
 
 add_executable(${TARGET} ${HEADERS} ${SOURCES})
 
-target_link_libraries(${TARGET} ${FLTK_LIBRARIES} ${OPENGL_LIBRARIES})
+target_link_libraries(${TARGET} ${FLTK_LIBRARIES} ${OPENGL_LIBRARIES} gdiplus)
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(${TARGET} fltk_jpeg fltk_png fltk_z)
 endif()

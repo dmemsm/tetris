@@ -24,8 +24,8 @@ Figure::Figure() {
             // * * *
             //   *
             pixels[0].set_position(middle_col-1, 0);
-            pixels[1].set_position(middle_col, 0);
-            pixels[2].set_position(middle_col+1, 0);
+            pixels[1].set_position(middle_col+1, 0);
+            pixels[2].set_position(middle_col, 0);
             pixels[3].set_position(middle_col, 1);
             break;
         }
@@ -50,8 +50,8 @@ Figure::Figure() {
             //   * *
             // * *
             pixels[0].set_position(middle_col, 0);
-            pixels[1].set_position(middle_col+1, 0);
-            pixels[2].set_position(middle_col-1, 1);
+            pixels[1].set_position(middle_col-1, 1);
+            pixels[2].set_position(middle_col+1, 0);
             pixels[3].set_position(middle_col, 1);
             break;
         }
@@ -59,8 +59,8 @@ Figure::Figure() {
             // * *
             //   * *
             pixels[0].set_position(middle_col-1, 0);
-            pixels[1].set_position(middle_col, 0);
-            pixels[2].set_position(middle_col, 1);
+            pixels[1].set_position(middle_col, 1);
+            pixels[2].set_position(middle_col, 0);
             pixels[3].set_position(middle_col+1, 1);
             break;
         }
@@ -79,7 +79,6 @@ Figure::Figure() {
 int Figure::get_color() {
     return this->color;
 }
-
 int Figure::get_pixel_col(int pixel_num) {
     if (pixel_num > 3 || pixel_num < 0) {
         return 0;
@@ -112,7 +111,7 @@ void Figure::move_right() {
     }
 }
 
-bool Figure::can_move_left(bool filled[16][20]) {
+bool Figure::can_move_left(bool filled[board_width][board_length]) {
     for (int i = 0; i < 4; i++) {
         if (get_pixel_col(i) == 0) {
             return false;
@@ -124,7 +123,7 @@ bool Figure::can_move_left(bool filled[16][20]) {
     return true;
 }
 
-bool Figure::can_move_right(bool filled[16][20]) {
+bool Figure::can_move_right(bool filled[board_width][board_length]) {
     for (int i = 0; i < 4; i++) {
         if (get_pixel_col(i) == 15) {
             return false;
@@ -136,7 +135,7 @@ bool Figure::can_move_right(bool filled[16][20]) {
     return true;
 }
 
-bool Figure::can_move_down(bool filled[16][20]) {
+bool Figure::can_move_down(bool filled[board_width][board_length]) {
     for (int i = 0; i < 4; i++) {
         if (get_pixel_row(i) == 19) {
             return false;
@@ -148,37 +147,37 @@ bool Figure::can_move_down(bool filled[16][20]) {
     return true;
 }
 
-void Figure::rotate_cw() {
-    int afterrotate[4][2];
-    int pivr,pivc;
-    // We choose tiles[2] as pivot and rotate wrt it.
-    pivr = this->pixels[2].get_row();
-    pivc = this->pixels[2].get_col();
+// void Figure::rotate_cw() {
+//     int afterrotate[4][2];
+//     int pivr,pivc;
+//     // We choose tiles[2] as pivot and rotate wrt it.
+//     pivr = this->pixels[2].get_row();
+//     pivc = this->pixels[2].get_col();
 
-    int coldiff[4];
-    int rowdiff[4];
-    for(int i=0;i<4;i++){
-        rowdiff[i] = pivr - this->pixels[i].get_row();
-        coldiff[i] = this->pixels[i].get_col() - pivc;
-    }
-    for(int i=0;i<4;i++)
-    {
-        afterrotate[i][0] = pivr + coldiff[i]; // new row
-        afterrotate[i][1] = pivc + rowdiff[i]; // new col
-    }
-    if(type!=6)
-    {
-        this->pixels[0].set_row(afterrotate[0][0]);
-        this->pixels[0].set_col(afterrotate[0][1]);
-        this->pixels[1].set_row(afterrotate[1][0]);
-        this->pixels[1].set_col(afterrotate[1][1]);
-        this->pixels[3].set_row(afterrotate[3][0]);
-        this->pixels[3].set_col(afterrotate[3][1]);
-    }
-}
+//     int coldiff[4];
+//     int rowdiff[4];
+//     for(int i=0;i<4;i++){
+//         rowdiff[i] = pivr - this->pixels[i].get_row();
+//         coldiff[i] = this->pixels[i].get_col() - pivc;
+//     }
+//     for(int i=0;i<4;i++)
+//     {
+//         afterrotate[i][0] = pivr + coldiff[i]; // new row
+//         afterrotate[i][1] = pivc + rowdiff[i]; // new col
+//     }
+//     if(type!=6)
+//     {
+//         this->pixels[0].set_row(afterrotate[0][0]);
+//         this->pixels[0].set_col(afterrotate[0][1]);
+//         this->pixels[1].set_row(afterrotate[1][0]);
+//         this->pixels[1].set_col(afterrotate[1][1]);
+//         this->pixels[3].set_row(afterrotate[3][0]);
+//         this->pixels[3].set_col(afterrotate[3][1]);
+//     }
+// }
 
 void Figure::rotate_acw() {
-    int afterrotate[4][2];
+    int afterrotate[4][2]; // first elem col, second elem row
     int rotate_col = this->pixels[2].get_col();
     int rotate_row = this->pixels[2].get_row();
 
@@ -190,16 +189,28 @@ void Figure::rotate_acw() {
     }
     for(int i=0;i<4;i++)
     {
-        afterrotate[i][0] = rotate_row - coldiff[i]; // new row
-        afterrotate[i][1] = rotate_col - rowdiff[i]; // new col
+        afterrotate[i][0] = rotate_col - rowdiff[i]; // new col
+        afterrotate[i][1] = rotate_row - coldiff[i]; // new row
     }
-    if(type!=6)
-    {
-        this->pixels[0].set_row(afterrotate[0][0]);
-        this->pixels[0].set_col(afterrotate[0][1]);
-        this->pixels[1].set_row(afterrotate[1][0]);
-        this->pixels[1].set_col(afterrotate[1][1]);
-        this->pixels[3].set_row(afterrotate[3][0]);
-        this->pixels[3].set_col(afterrotate[3][1]);
+    
+    bool can_rotate= true; //flag checking for rotation 
+
+    for (int i = 0; i < 4; i++){
+        if (afterrotate[i][0] < 0 || afterrotate[i][0] > board_width - 1) {
+            can_rotate = false;
+            break;
+        }
+    }
+    if (can_rotate){
+        if(type!=6)
+        {
+            this->pixels[0].set_row(afterrotate[0][0]);
+            this->pixels[0].set_col(afterrotate[0][1]);
+            this->pixels[1].set_row(afterrotate[1][0]);
+            this->pixels[1].set_col(afterrotate[1][1]);
+            this->pixels[3].set_row(afterrotate[3][0]);
+            this->pixels[3].set_col(afterrotate[3][1]);
+        }
     }
 }
+

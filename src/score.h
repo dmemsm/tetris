@@ -10,6 +10,6 @@ struct Score {
 
     void add_score(int score);
 private:
-    int current_score;
+    int current_score = 0;
 
 };
