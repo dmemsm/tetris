@@ -161,6 +161,8 @@ void Board::update_by_time() {
             filled[current_figure->get_pixel_col(i)][current_figure->get_pixel_row(i)] = true;
         }
         current_figure = next_figure;
+        this->add_current_figure();
+        Fl::redraw();
         next_figure = new Figure();
     }
     for (int i = 0; i < board_length; i++) {
