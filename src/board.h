@@ -20,7 +20,8 @@ struct Board : Window {
     void delete_current_figure();
     void add_current_figure();
     void add_new_figure();
-    void check_game_over();
+    void game_over();
+    bool check_game_over();
 
 private:
     Graph_lib::Rectangle* filledPixels[board_width][board_length];
@@ -30,5 +31,6 @@ private:
     Figure* next_figure;
 
     void draw_pixels();
+    bool is_game_over = false;
     //void draw() override;
 };

@@ -12,8 +12,29 @@ Window::Window(Graph_lib::Point xy, int w, int h, const std::string &title)
 
 
 void repeated(void *p) {
-    ((Board*)p)->update_by_time();
-    Fl::add_timeout(0.5, repeated, p);
+    if (((Board*)p)->check_game_over()){
+        ((Board*)p)->game_over();
+    }
+    else{
+        std::cout << "new figure" << std::endl;
+        ((Board*)p)->update_by_time();
+        Fl::add_timeout(0.5, repeated, p);
+
+    }
+}
+
+
+bool Board::check_game_over(){
+    for (int i = 0; i < board_width; i++){
+        if (filled[i][0]){
+            return true;
+        }
+    }
+    return false;
+}
+
+void Board::game_over(){ //TODO дописать логику гейм овера, отключение реакции на клавишы вывод сообщения о конце игры создание кнопки новой игры
+
 }
 
 Board::Board(Graph_lib::Point xy, int w, int h, const std::string &title) : Window(xy, w, h, title) {
@@ -152,6 +173,10 @@ void Board::add_current_figure() {
 }
 
 void Board::update_by_time() {
+    for (int j =0; j<16;j++){
+        for (int i = 0 ;i <20;i++){
+            std::cout << filled[j][i];
+        }}
     if (current_figure->can_move_down(this->filled)) {
         this->delete_current_figure();
         current_figure->move_down();
@@ -182,6 +207,9 @@ void Board::update_by_time() {
             this->score->add_score(100); // TODO Some more interesting logic
         }
     }
+
+
+
 }
 
 void Board::add_new_figure() {
