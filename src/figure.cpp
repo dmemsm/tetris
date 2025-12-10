@@ -223,3 +223,7 @@ void Figure::rotate_acw(bool filled[board_width][board_length]) {
     }
 }
 
+int Figure::get_type() {
+    return this->type;
+}
+

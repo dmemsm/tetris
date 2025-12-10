@@ -8,6 +8,7 @@ struct Figure {
     int get_color();
     int get_pixel_col(int pixel_num);
     int get_pixel_row(int pixel_num);
+    int get_type();
     bool can_move_left(bool filled[board_width][board_length]);
     bool can_move_right(bool filled[board_width][board_length]);
     bool can_move_down(bool filled[board_width][board_length]);

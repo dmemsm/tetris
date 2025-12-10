@@ -46,6 +46,25 @@ Board::Board(Graph_lib::Point xy, int w, int h, const std::string &title) : Wind
     rect->set_style(style);
     this->attach(*rect);
 
+    int field_width = pixel_size * board_width + 4;
+    int new_figure_border_x = std::round(field_width + (w - field_width) / 2 - pixel_size * 3);
+    int new_figure_border_y = std::round(h * 3 / 4 - pixel_size * 3);
+//    auto new_figure_border = new Graph_lib::Rectangle(Graph_lib::Point(
+//            new_figure_border_x,
+//            new_figure_border_y),pixel_size * 6,pixel_size * 6);
+//    this->attach(*new_figure_border);
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            auto pixel = new Graph_lib::Rectangle(Graph_lib::Point(
+                    new_figure_border_x + pixel_size * (i + 1), new_figure_border_y + pixel_size * (j + 1)
+                    ), pixel_size, pixel_size);
+            pixel->set_fill_color(Graph_lib::Color::red);
+            pixel->set_color(Graph_lib::Color::dark_cyan);
+            next_figure_pixels[i][j] = pixel;
+            this->attach(*pixel);
+        }
+    }
+
     this->score = new Score();
     this->attach(*score->text_obj);
 
@@ -68,6 +87,7 @@ Board::Board(Graph_lib::Point xy, int w, int h, const std::string &title) : Wind
                 set_fill_color(Graph_lib::Color(current_figure->get_color()));
     }
     this->next_figure = new Figure();
+    this->show_next_figure();
 
     Fl::add_timeout(1.0, repeated, this);
 
@@ -227,12 +247,26 @@ void Board::add_new_figure() {
     this->show_current_figure();
     Fl::redraw();
     next_figure = new Figure();
+    this->show_next_figure();
 }
 
 void Board::update_field() {
     if (!this->current_figure->can_move_down(this->filled)) {
         add_new_figure();
     }
+}
+
+void Board::show_next_figure() {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            this->next_figure_pixels[i][j]->set_fill_color(Graph_lib::Color::dark_cyan);
+        }
+    }
+    for (int i = 0; i < 4; i++) {
+        int col_dif = next_figure->get_type() == 3 ? 7 : 6;
+        this->next_figure_pixels[next_figure->get_pixel_col(i) - col_dif][next_figure->get_pixel_row(i) + 1]->set_fill_color(next_figure->get_color());
+    }
+    Fl::redraw();
 }
 
 void Board::debug_field() {
