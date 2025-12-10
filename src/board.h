@@ -15,14 +15,19 @@ struct Window : Graph_lib::Window {
 struct Board : Window {
     Board(Graph_lib::Point xy, int w, int h, const std::string& title);
 
+    bool is_game_over = false;
+
     int handle(int key) override;
     void update_by_time();
-    void delete_current_figure();
-    void add_current_figure();
+    void hide_current_figure();
+    void show_current_figure();
     void add_new_figure();
     void game_over();
     bool check_game_over();
+    void check_filled_raws();
+    void update_field();
 
+    void debug_field();
 private:
     Graph_lib::Rectangle* filledPixels[board_width][board_length];
     bool filled[board_width][board_length];
@@ -31,6 +36,4 @@ private:
     Figure* next_figure;
 
     void draw_pixels();
-    bool is_game_over = false;
-    //void draw() override;
 };

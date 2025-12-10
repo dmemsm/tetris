@@ -12,15 +12,14 @@ Window::Window(Graph_lib::Point xy, int w, int h, const std::string &title)
 
 
 void repeated(void *p) {
-    if (((Board*)p)->check_game_over()){
-        ((Board*)p)->game_over();
+    Board* board = ((Board*)p);
+    if (board->check_game_over() || board->is_game_over) {
+        board->is_game_over = true;
+        board->game_over();
+        return;
     }
-    else{
-        std::cout << "new figure" << std::endl;
-        ((Board*)p)->update_by_time();
-        Fl::add_timeout(0.5, repeated, p);
-
-    }
+    board->update_by_time();
+    Fl::add_timeout(0.5, repeated, p);
 }
 
 
@@ -33,8 +32,8 @@ bool Board::check_game_over(){
     return false;
 }
 
-void Board::game_over(){ //TODO дописать логику гейм овера, отключение реакции на клавишы вывод сообщения о конце игры создание кнопки новой игры
-
+void Board::game_over(){ //TODO дописать логику гейм овера, вывод сообщения о конце игры создание кнопки новой игры
+    std::cout << "Game over!";
 }
 
 Board::Board(Graph_lib::Point xy, int w, int h, const std::string &title) : Window(xy, w, h, title) {
@@ -77,61 +76,65 @@ Board::Board(Graph_lib::Point xy, int w, int h, const std::string &title) : Wind
 
 int Board::handle(int key) {
     if (key == FL_KEYDOWN) {
-        switch (Fl::event_key()) {
-            case FL_Left: {
-                std::cout << "left\n";
-                if (current_figure->can_move_left(this->filled)) {
-                    this->delete_current_figure();
-                    current_figure->move_left();
-                    this->add_current_figure();
-                    Fl::redraw();
+        int key_code = Fl::event_key();
+        if (!is_game_over || key_code == FL_Escape) {
+            switch (key_code) {
+                case FL_Left: {
+                    std::cout << "left\n";
+                    if (current_figure->can_move_left(this->filled)) {
+                        this->hide_current_figure();
+                        current_figure->move_left();
+                        this->show_current_figure();
+                        Fl::redraw();
+                    }
+                    break;
                 }
-                break;
-            }
-            case FL_Right: {
-                std::cout << "right\n";
-                if (current_figure->can_move_right(this->filled)) {
-                    this->delete_current_figure();
-                    current_figure->move_right();
-                    this->add_current_figure();
-                    Fl::redraw();
+                case FL_Right: {
+                    std::cout << "right\n";
+                    if (current_figure->can_move_right(this->filled)) {
+                        this->hide_current_figure();
+                        current_figure->move_right();
+                        this->show_current_figure();
+                        Fl::redraw();
+                    }
+                    break;
                 }
-                break;
-            }
-            case FL_Up: {
-                std::cout << "up\n";
-                this->delete_current_figure();
-                current_figure->rotate_acw(this -> filled);
-                this->add_current_figure();
-                Fl::redraw();
-                break;
-            }
-            case FL_Down: {
-                std::cout << "down\n";
-                if (current_figure -> can_move_down(this -> filled)){
-                    this->delete_current_figure();
-                    current_figure->move_down();
-                    this->add_current_figure();
+                case FL_Up: {
+                    std::cout << "up\n";
+                    this->hide_current_figure();
+                    current_figure->rotate_acw(this->filled);
+                    this->show_current_figure();
                     Fl::redraw();
-            }
-                break;
-            }
-            case 32: { // Space
-                //draw_pixels();
-                std::cout << "space\n";
-                this->delete_current_figure();
-                while (current_figure->can_move_down(this->filled)) {
-                    current_figure->move_down();
+                    break;
                 }
-                this->add_current_figure();
-                this->add_new_figure();
-                Fl::redraw();
-                break;
+                case FL_Down: {
+                    std::cout << "down\n";
+                    if (current_figure->can_move_down(this->filled)) {
+                        this->hide_current_figure();
+                        current_figure->move_down();
+                        this->show_current_figure();
+                    }
+                    update_field();
+                    Fl::redraw();
+                    break;
+                }
+                case 32: { // Space
+                    //draw_pixels();
+                    std::cout << "space\n";
+                    this->hide_current_figure();
+                    while (current_figure->can_move_down(this->filled)) {
+                        current_figure->move_down();
+                    }
+                    this->show_current_figure();
+                    update_field();
+                    break;
+                }
+                case FL_Escape: {
+                    exit(0);
+                    break;
+                }
             }
-            case FL_Escape: {
-                exit(0);
-                break;
-            }
+            check_filled_raws();
         }
     }
     return key;
@@ -158,33 +161,21 @@ void Board::draw_pixels() {
     Fl::redraw();
 }
 
-void Board::delete_current_figure() {
+void Board::hide_current_figure() {
     for (int i = 0; i < 4; i++) {
         filledPixels[current_figure->get_pixel_col(i)][current_figure->get_pixel_row(i)]->set_fill_color(
                 Graph_lib::Color::dark_cyan);
     }
 }
 
-void Board::add_current_figure() {
+void Board::show_current_figure() {
     for (int i = 0; i < 4; i++) {
         filledPixels[current_figure->get_pixel_col(i)][current_figure->get_pixel_row(i)]->set_fill_color(
                 current_figure->get_color());
     }
 }
 
-void Board::update_by_time() {
-    for (int j =0; j<16;j++){
-        for (int i = 0 ;i <20;i++){
-            std::cout << filled[j][i];
-        }}
-    if (current_figure->can_move_down(this->filled)) {
-        this->delete_current_figure();
-        current_figure->move_down();
-        this->add_current_figure();
-        Fl::redraw();
-    } else {
-        add_new_figure();
-    }
+void Board::check_filled_raws() {
     for (int i = 0; i < board_length; i++) {
         bool row_filled = true;
         for (int j = 0; j < board_width; j++) {
@@ -194,6 +185,7 @@ void Board::update_by_time() {
             }
         }
         if (row_filled) {
+            std::cout << "Found filled raw " << i << "\nCurrent colors:\n";
             for (int col = 0; col < board_width; col++) {
                 filled[col][i] = false;
                 filledPixels[col][i]->set_fill_color(Graph_lib::Color::dark_cyan);
@@ -205,19 +197,56 @@ void Board::update_by_time() {
                 }
             }
             this->score->add_score(100); // TODO Some more interesting logic
+            Fl::redraw();
         }
     }
+}
 
-
-
+void Board::update_by_time() {
+    if (current_figure->can_move_down(this->filled)) {
+        this->hide_current_figure();
+        current_figure->move_down();
+        this->show_current_figure();
+        Fl::redraw();
+    }
+    update_field();
 }
 
 void Board::add_new_figure() {
     for (int i = 0; i < 4; i++) {
         filled[current_figure->get_pixel_col(i)][current_figure->get_pixel_row(i)] = true;
     }
+    check_filled_raws();
+    for (int i = 0; i < 4; i++) {
+        if (this->filledPixels[next_figure->get_pixel_col(i)][next_figure->get_pixel_row(i)]->fill_color().as_int() != Graph_lib::Color::dark_cyan) {
+            this->is_game_over = true;
+            return;
+        }
+    }
     current_figure = next_figure;
-    this->add_current_figure();
+    this->show_current_figure();
     Fl::redraw();
     next_figure = new Figure();
+}
+
+void Board::update_field() {
+    if (!this->current_figure->can_move_down(this->filled)) {
+        add_new_figure();
+    }
+}
+
+void Board::debug_field() {
+    for (int k = 0; k < board_length; k++) {
+        for (int l = 0; l < board_width; l++) {
+            std::cout << filledPixels[l][k]->fill_color().as_int() << " ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "Filled:\n";
+    for (int k = 0; k < board_length; k++) {
+        for (int l = 0; l < board_width; l++) {
+            std::cout << filled[l][k] << " ";
+        }
+        std::cout << "\n";
+    }
 }
