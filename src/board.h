@@ -18,7 +18,8 @@ struct Board : Window {
     int handle(int key) override;
     void update_by_time();
     void delete_current_figure();
-    void add_current_figure(); 
+    void add_current_figure();
+    void add_new_figure();
     void check_game_over();
 
 private:
