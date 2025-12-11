@@ -1,10 +1,10 @@
 #include "pixel.h"
 
-int Pixel::get_col() {
+int Pixel::get_col() const {
     return this->col;
 }
 
-int Pixel::get_row() {
+int Pixel::get_row() const {
     return this->row;
 }
 

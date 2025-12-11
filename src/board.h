@@ -28,14 +28,13 @@ struct Board : Window {
     void update_field();
     void show_next_figure();
 
-    void debug_field();
 private:
-    Graph_lib::Rectangle* filledPixels[board_width][board_length];
+    Graph_lib::Rectangle* filled_pixels[board_width][board_length];
     Graph_lib::Rectangle* next_figure_pixels[4][4];
     bool filled[board_width][board_length];
     Score* score;
     Figure* current_figure;
     Figure* next_figure;
 
-    void draw_pixels();
+    void debug_field();
 };

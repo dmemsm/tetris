@@ -1,6 +1,5 @@
 #include "iostream"
 #include "score.h"
-#include "board.h"
 
 Score::Score() {
     text_obj = new Graph_lib::Text(Graph_lib::Point(500, 100), "Current score: " + std::to_string(current_score));
