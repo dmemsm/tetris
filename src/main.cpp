@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Graph_lib/Graph.h"
 #include "board.h"
-#include <random>
 
 void initialize_board() {
     Board board{Graph_lib::Point(100, 100), 800, 620, "Tetris"};

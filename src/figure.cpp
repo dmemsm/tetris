@@ -1,8 +1,6 @@
 #include "figure.h"
 #include "Graph_lib/fltk.h"
 
-#include "ctime"
-
 Figure::Figure() {
     this->color = std::rand() % 6;
     this->type = std::rand() % 7;
