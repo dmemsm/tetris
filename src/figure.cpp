@@ -1,11 +1,10 @@
 #include "figure.h"
 #include "Graph_lib/fltk.h"
-#include <cmath>
 
 Figure::Figure() {
     this->color = std::rand() % 6;
     this->type = std::rand() % 7;
-    int middle_col = std::round(board_width / 2);
+    int middle_col = figure_spawn_col;
     switch (this->type) {
         case 0: {
             // * * *
