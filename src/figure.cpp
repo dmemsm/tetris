@@ -4,9 +4,8 @@
 #include "ctime"
 
 Figure::Figure() {
-    //std::srand(std::time(nullptr));
-    this->color = rand() % 6;
-    this->type = rand() % 7;
+    this->color = std::rand() % 6;
+    this->type = std::rand() % 7;
     int middle_col = 8;
     switch (this->type) {
         case 0: {

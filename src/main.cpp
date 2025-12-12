@@ -9,6 +9,7 @@ void initialize_board() {
 
 int main () {
     try {
+        std::srand(time(nullptr));
         initialize_board();
     }
     catch (std::exception &e) {
