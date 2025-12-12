@@ -4,7 +4,6 @@
 #include "ctime"
 
 Figure::Figure() {
-    //std::srand(std::time(nullptr));
     this->color = rand() % 6;
     this->type = rand() % 7;
     int middle_col = 8;
@@ -31,8 +30,8 @@ Figure::Figure() {
             // * * *
             // *
             pixels[0].set_position(middle_col-1, 0);
-            pixels[1].set_position(middle_col, 0);
-            pixels[2].set_position(middle_col+1, 0);
+            pixels[2].set_position(middle_col, 0);
+            pixels[1].set_position(middle_col+1, 0);
             pixels[3].set_position(middle_col-1, 1);
             break;
         }
