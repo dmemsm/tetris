@@ -1,8 +1,9 @@
 #include "iostream"
 #include "score.h"
+#include "constants.h"
 
 Score::Score() {
-    text_obj = new Graph_lib::Text(Graph_lib::Point(500, 100), "Current score: " + std::to_string(current_score));
+    text_obj = new Graph_lib::Text(Graph_lib::Point(pixel_size * board_width + 80, 100), "Current score: " + std::to_string(current_score));
     text_obj->set_font_size(24);
 }
 

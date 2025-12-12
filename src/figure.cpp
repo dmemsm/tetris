@@ -1,10 +1,11 @@
 #include "figure.h"
 #include "Graph_lib/fltk.h"
+#include <cmath>
 
 Figure::Figure() {
     this->color = std::rand() % 6;
     this->type = std::rand() % 7;
-    int middle_col = 8;
+    int middle_col = std::round(board_width / 2);
     switch (this->type) {
         case 0: {
             // * * *
@@ -121,7 +122,7 @@ bool Figure::can_move_left(bool filled[board_width][board_length]) {
 
 bool Figure::can_move_right(bool filled[board_width][board_length]) {
     for (int i = 0; i < 4; i++) {
-        if (get_pixel_col(i) == 15) {
+        if (get_pixel_col(i) == board_width - 1) {
             return false;
         }
         if (filled[get_pixel_col(i)+1][get_pixel_row(i)]) {
@@ -133,7 +134,7 @@ bool Figure::can_move_right(bool filled[board_width][board_length]) {
 
 bool Figure::can_move_down(bool filled[board_width][board_length]) {
     for (int i = 0; i < 4; i++) {
-        if (get_pixel_row(i) == 19) {
+        if (get_pixel_row(i) == board_length - 1) {
             return false;
         }
         if (filled[get_pixel_col(i)][get_pixel_row(i)+1]) {

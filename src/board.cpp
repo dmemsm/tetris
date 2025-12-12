@@ -217,8 +217,9 @@ void Board::show_next_figure() {
             this->next_figure_pixels[i][j]->set_fill_color(Graph_lib::Color::dark_cyan);
         }
     }
+    int middle_col = std::round(board_width / 2);
+    int col_dif = next_figure->get_type() == 3 ? middle_col - 1 : middle_col - 2;
     for (int i = 0; i < 4; i++) {
-        int col_dif = next_figure->get_type() == 3 ? 7 : 6;
         this->next_figure_pixels[next_figure->get_pixel_col(i) - col_dif][next_figure->get_pixel_row(i) + 1]->set_fill_color(next_figure->get_color());
     }
     Fl::redraw();
